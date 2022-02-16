@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}
+  labels:
+    app: {{ .Values.appName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+    spec:
+      containers:
+        - args:
+            - ./wait-for-it.sh
+            - postgres:5432
+            - --
+            - npm
+            - start
+          env:
+            - name: SITE_NAME
+              value: "Kutt"
+            - name: DEFAULT_DOMAIN
+              value: "localhost:3000"
+            - name: JWT_SECRET
+              value: "securekey"
+            - name: MAIL_HOST
+              value: "localhost"
+            - name: MAIL_PORT 
+              value: "25"
+            - name: MAIL_USER 
+              value: "root"
+            - name: MAIL_PASSWORD
+              value: "1234"
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_HOST
+                  name: env-file
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_NAME
+                  name: env-file
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: DB_PASSWORD
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key:  DB_USER
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_HOST
+                  name: env-file
+          image: kutt:{{ .Values.deployment.imageTag }}
+          name: {{ .Values.appName }}
+          ports:
+            - containerPort: 3000
+          resources: {}
+      restartPolicy: {{ .Values.deployment.restartPolicy }}
+status: {}

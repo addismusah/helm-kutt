@@ -1,0 +1,48 @@
+
+appName: kutt
+stsName: kutt-postgres
+volumeName: postgres-data
+redisName: redis
+redisVname: redis-data
+appServiceName: kutt-svc
+
+deployment:
+  imageTag: latest
+  restartPolicy: Always
+
+envFileConfigmap:    
+  db_host: postgres
+  db_name: kutt
+
+configmap:
+  name: pgconfigmap
+
+Statefulset:
+  replicas: 1
+  imageTag: 12-alpine
+  restartPolicy: Always
+
+postgresService:
+  name: postgres-svc
+  portName: postgress-svc-port
+
+secret:
+  name: postgresdb-secret
+
+postgresSecret:
+  name: postgres-secret
+
+redis: 
+  replicas: 1
+  imageTag: 6.0-alpine
+
+redisService:
+  name: redis-svc
+  ports:
+    name: redis-port
+
+ingress:
+  name: kutt-ingress
+  annotations: 
+    ssl: "false"
+  host: "k8saddismusah.dev"

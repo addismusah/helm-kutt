@@ -1,0 +1,4 @@
+apiVersion: v2
+name: helm-kutt
+version: 1.0.0
+description: helm chart for kutt app

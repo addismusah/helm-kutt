@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.redisName }}
+spec:
+  selector:
+    matchLabels:
+      data-db: {{ .Values.redisName }}
+  serviceName: ""
+  replicas: {{ .Values.redis.replicas }}
+  template:
+    metadata:
+      labels:
+        data-db: {{ .Values.redisName }}
+    spec:
+      containers:
+        - image: redis:{{ .Values.redis.imageTag }}
+          name: {{ .Values.redisName }}
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - mountPath: /data
+              name: {{ .Values.redisVname }}
+      restartPolicy: {{ .Values.Statefulset.restartPolicy }}
+      volumes:
+        - name: {{ .Values.redisVname }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.redisVname }}
