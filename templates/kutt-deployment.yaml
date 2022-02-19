@@ -25,7 +25,7 @@ spec:
             - name: SITE_NAME
               value: "Kutt"
             - name: DEFAULT_DOMAIN
-              value: "localhost:3000"
+              value: "k8saddismusah.dev"
             - name: JWT_SECRET
               value: "securekey"
             - name: MAIL_HOST
@@ -49,19 +49,19 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
+                  name: postgresdb-secret
                   key: DB_PASSWORD
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
+                  name: postgresdb-secret
                   key:  DB_USER
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
                   key: REDIS_HOST
                   name: env-file
-          image: kutt:{{ .Values.deployment.imageTag }}
+          image: kutt/kutt:{{ .Values.deployment.imageTag }}
           name: {{ .Values.appName }}
           ports:
             - containerPort: 3000

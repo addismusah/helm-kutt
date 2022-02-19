@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   DB_HOST: {{ .Values.envFileConfigmap.db_host }}
   DB_NAME: {{ .Values.envFileConfigmap.db_name }}
-  REDIS_HOST: {{ .Values.redisName }} 
+  REDIS_HOST: {{ .Values.redisService.name }} 
 kind: ConfigMap
 metadata:
   name: env-file
